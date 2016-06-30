@@ -66,7 +66,11 @@ class Animator: PullToRefreshViewDelegate {
     init(frame: CGRect) {
         animatorView = AnimatorView(frame: frame)
     }
-    
+
+    func pullToRefreshAnimationWillStart(view: PullToRefreshView) {
+        //Intentionally empty
+    }
+
     func pullToRefreshAnimationDidStart(view: PullToRefreshView) {
         animatorView.activityIndicatorView.startAnimating()
         animatorView.titleLabel.text = "Loading"

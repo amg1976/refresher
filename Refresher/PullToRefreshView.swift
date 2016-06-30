@@ -36,6 +36,7 @@ public enum PullToRefreshViewState {
 
 public protocol PullToRefreshViewDelegate {
     
+    func pullToRefreshAnimationWillStart(view: PullToRefreshView)
     func pullToRefreshAnimationDidStart(view: PullToRefreshView)
     func pullToRefreshAnimationDidEnd(view: PullToRefreshView)
     func pullToRefresh(view: PullToRefreshView, progressDidChange progress: CGFloat)
@@ -137,7 +138,7 @@ public class PullToRefreshView: UIView {
                         }
                     } else if (loading) {
                         self.animator.pullToRefresh(self, stateDidChange: .Loading)
-                    } else if (offsetWithoutInsets < 0) {
+                    } else if (offsetWithoutInsets < 0 && scrollView.dragging) {
                         self.animator.pullToRefresh(self, stateDidChange: .PullToRefresh)
                         animator.pullToRefresh(self, progressDidChange: -offsetWithoutInsets / self.frame.size.height)
                     }
@@ -153,6 +154,7 @@ public class PullToRefreshView: UIView {
     //MARK: PullToRefreshView methods
 
     private func startAnimating() {
+        animator.pullToRefreshAnimationWillStart(self)
         let scrollView = superview as! UIScrollView
         var insets = scrollView.contentInset
         insets.top += self.frame.size.height
