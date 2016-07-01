@@ -52,6 +52,8 @@ public class PullToRefreshView: UIView {
     private var action: (() -> ()) = {}
 
     private var previousOffset: CGFloat = 0
+    
+    private var isAnimating = false
 
     internal var loading: Bool = false {
         
@@ -138,7 +140,7 @@ public class PullToRefreshView: UIView {
                         }
                     } else if (loading) {
                         self.animator.pullToRefresh(self, stateDidChange: .Loading)
-                    } else if (offsetWithoutInsets < 0 && scrollView.dragging) {
+                    } else if (offsetWithoutInsets < 0 && !isAnimating) {
                         self.animator.pullToRefresh(self, stateDidChange: .PullToRefresh)
                         animator.pullToRefresh(self, progressDidChange: -offsetWithoutInsets / self.frame.size.height)
                     }
@@ -154,6 +156,7 @@ public class PullToRefreshView: UIView {
     //MARK: PullToRefreshView methods
 
     private func startAnimating() {
+        isAnimating = true
         animator.pullToRefreshAnimationWillStart(self)
         let scrollView = superview as! UIScrollView
         var insets = scrollView.contentInset
@@ -179,6 +182,7 @@ public class PullToRefreshView: UIView {
             scrollView.contentInset = self.scrollViewInsetsDefaultValue
         }) { finished in
             self.animator.pullToRefresh(self, progressDidChange: 0)
+            self.isAnimating = false
         }
     }
 }
