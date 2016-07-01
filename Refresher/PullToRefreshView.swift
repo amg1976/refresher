@@ -45,6 +45,8 @@ public protocol PullToRefreshViewDelegate {
 
 public class PullToRefreshView: UIView {
     
+    public let animationDuration = 0.3
+    
     private var scrollViewBouncesDefaultValue: Bool = false
     private var scrollViewInsetsDefaultValue: UIEdgeInsets = UIEdgeInsetsZero
 
@@ -165,7 +167,7 @@ public class PullToRefreshView: UIView {
         // we need to restore previous offset because we will animate scroll view insets and regular scroll view animating is not applied then
         scrollView.contentOffset.y = previousOffset
         scrollView.bounces = false
-        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions(), animations: {
+        UIView.animateWithDuration(animationDuration, delay: 0, options: UIViewAnimationOptions(), animations: {
             scrollView.contentInset = insets
             scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, -insets.top)
         }, completion: {finished in
@@ -178,7 +180,7 @@ public class PullToRefreshView: UIView {
         self.animator.pullToRefreshAnimationDidEnd(self)
         let scrollView = superview as! UIScrollView
         scrollView.bounces = self.scrollViewBouncesDefaultValue
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animateWithDuration(animationDuration, animations: {
             scrollView.contentInset = self.scrollViewInsetsDefaultValue
         }) { finished in
             self.animator.pullToRefresh(self, progressDidChange: 0)
